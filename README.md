@@ -1,2 +1,2 @@
 # GRM_layer
-External Knowledge Graph Reasoning
+Weakly supervised semantic segmentation by knowledge graph with GCN
