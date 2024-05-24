@@ -37,7 +37,7 @@ def validate(model, data_loader):
             label = pack['label'].cuda(non_blocking=True)
             inp_var = pack['inp']
 
-            x1,x = model(img, inp_var)
+            x,x1 = model(img, inp_var)
             loss1 = FocalLoss(x1, label)
             loss = F.multilabel_soft_margin_loss(x, label)
 
