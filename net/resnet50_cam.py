@@ -16,6 +16,38 @@ from graph.grm_layer import *
 from graph import *
 from graph.voc_data import *
 
+#Graph convolution
+class GraphConvolution(nn.Module):
+    """
+    Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
+    """
+
+    def __init__(self, in_features, out_features, bias=False):
+        super(GraphConvolution, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = Parameter(torch.Tensor(in_features, out_features))
+        if bias:
+            self.bias = Parameter(torch.Tensor(1, 1, out_features))
+        else:
+            self.register_parameter('bias', None)
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        stdv = 1. / math.sqrt(self.weight.size(1))
+        self.weight.data.uniform_(-stdv, stdv)
+        if self.bias is not None:
+            self.bias.data.uniform_(-stdv, stdv)
+
+    def forward(self, input, adj):
+        support = torch.matmul(input, self.weight.cuda())
+        #support = torch.matmul(input, self.weight)
+        adj=adj.to(input.cuda())
+        output = torch.matmul(adj, support)
+        if self.bias is not None:
+            return output + self.bias
+        else:
+            return output
 
 class FixedBatchNorm(nn.BatchNorm2d):
     def forward(self, input):
@@ -40,9 +72,21 @@ class Net(nn.Module):
         self.dropout = dropout
 
         ####################
-        voc_data = get_voc_data()
-        self.gc1 = GRMLayer(2048, 2048, **voc_data)
-        self.gc_add = nn.ModuleList([self.gc1])
+        self.gc1 = GraphConvolution(in_channel, 1024)
+        self.gc2 = GraphConvolution(1024, 2048)
+        self.relu = nn.LeakyReLU(0.2)
+
+        file_path = os.path.join( "./data/voc/CM_kg_57_info.json")
+        with open(file_path, 'r') as j:
+            info = json.load(j)
+        KG_VOC_info = info['KG_VOC_info']
+        #KG_VOC_info = info['KG_COCO_info']
+        #KF_All_VOC_info = info['KF_All_VOC_info']
+        S_KG_57_VOC = np.asarray(KG_VOC_info['S'])
+        #S_KF_All_VOC = np.asarray(KF_All_VOC_info['S'])
+        self.graph_adj = torch.FloatTensor(S_KG_57_VOC)
+        #S = torch.from_numpy(S_KG_57_VOC)
+        self.S = normalize_adjacency(self.graph_adj)
         ##################################
     
         self.classifier = nn.Conv2d(2048, n_classes, 1, bias=False)
