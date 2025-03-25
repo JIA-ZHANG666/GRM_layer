@@ -37,3 +37,14 @@ Step 3. Train IRN and generate pseudo masks.
   python run_sample_coco.py --mscoco_root ../MSCOCO/ --work_space YOUR_WORK_SPACE --cam_to_ir_label_pass True --train_irn_pass True --make_sem_seg_pass True --eval_sem_seg_pass True 
 
 Step 4. Train semantic segmentation network.
+
+Citation
+@article{zhang2024weakly,
+  title={Weakly supervised semantic segmentation by knowledge graph inference},
+  author={Zhang, Jia and Peng, Bo and Wu, Xi and Hu, Jie},
+  journal={Engineering Applications of Artificial Intelligence},
+  volume={138},
+  pages={109294},
+  year={2024},
+  publisher={Elsevier}
+}
