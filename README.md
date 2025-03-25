@@ -40,12 +40,19 @@ Step 4. Train semantic segmentation network.
 
 Citation
 
-@article{zhang2024weakly,\\
+@article{zhang2024weakly,
+
   title={Weakly supervised semantic segmentation by knowledge graph inference},
+  
   author={Zhang, Jia and Peng, Bo and Wu, Xi and Hu, Jie},
+  
   journal={Engineering Applications of Artificial Intelligence},
+  
   volume={138},
+  
   pages={109294},
+  
   year={2024},
+  
   publisher={Elsevier}
 }
