@@ -39,7 +39,7 @@ conda env create -f environment.yml
 ### Step 4. Train semantic segmentation network.
 
 ## Citation
-'''
+
 @article{zhang2024weakly,
 
   title={Weakly supervised semantic segmentation by knowledge graph inference},
@@ -56,4 +56,4 @@ conda env create -f environment.yml
   
   publisher={Elsevier}
 }
-'''
+
